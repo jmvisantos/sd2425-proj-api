@@ -129,27 +129,91 @@ public interface RestContent {
 	@Path("{" + POSTID + "}")
 	public void deletePost(@PathParam(POSTID) String postId, @QueryParam(PASSWORD) String userPassword);
 	
+	/**
+	 * Adds an upvote to a given post made by a specific user (might be different from the author
+	 * of the post). The vote must be authenticated by the password of the user adding the upvote. 
+	 * The upvote on a post can be only be made once by an user, and the user must not have a downvote
+	 * on that post.
+	 * @param postId unique identifier of the post over which the upvote is made
+	 * @param userId unique identifier of the user making the upvote
+	 * @param userPassword Password of user making the upvote
+	 * @return 	NO_CONTENT in case of success
+	 * 			NOT_FOUND if the postId does not match an existing post or the user does not exists
+	 * 			FORBIDDEN if the password is not correct
+	 * 			CONFLICT if the user already has made an upvote or downvote on the post
+	 *			BAD_REQUEST otherwise
+	 */
 	@PUT
 	@Path("{" + POSTID + "}/" + UPVOTE + "/{" + USERID + "}" )
 	public void upVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
+	/**
+	 * Removes a previously added upvote to a given post made by a specific user (might be different from the author
+	 * of the post). The action must be authenticated by the password of the user removing the upvote.
+	 * @param postId unique identifier of the post over which the upvote is removed
+	 * @param userId unique identifier of the user removing the upvote
+	 * @param userPassword Password of user removing the upvote
+	 * @return 	NO_CONTENT in case of success
+	 * 			NOT_FOUND if the postId does not match an existing post or the user does not exists
+	 * 			FORBIDDEN if the password is not correct
+	 * 			CONFLICT if the user had not made an upvote on this post previously
+	 *			BAD_REQUEST otherwise
+	 */
 	@PUT
 	@Path("{" + POSTID + "}/" + UPVOTE + "/{" + USERID + "}" )
 	public void removeUpVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
+	/**
+	 * Adds an downvote to a given post made by a specific user (might be different from the author
+	 * of the post). The vote must be authenticated by the password of the user adding the downvote. 
+	 * The downvote on a post can be only be made once by an user, and the user must not have a upvote
+	 * on that post.
+	 * @param postId unique identifier of the post over which the downvote is made
+	 * @param userId unique identifier of the user making the downvote
+	 * @param userPassword Password of user making the downvote
+	 * @return 	NO_CONTENT in case of success
+	 * 			NOT_FOUND if the postId does not match an existing post or the user does not exists
+	 * 			FORBIDDEN if the password is not correct
+	 * 			CONFLICT if the user already has made an upvote or downvote on the post
+	 *			BAD_REQUEST otherwise
+	 */
 	@PUT
 	@Path("{" + POSTID + "}/" + DOWNVOTE + "/{" + USERID + "}" )
 	public void downVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
+	/**
+	 * Removes a previously added downvote to a given post made by a specific user (might be different from the author
+	 * of the post). The action must be authenticated by the password of the user removing the downvote. 
+	 * @param postId unique identifier of the post over which the downvote is removed
+	 * @param userId unique identifier of the user removing the downvote
+	 * @param userPassword Password of user removing the downvote
+	 * @return 	NO_CONTENT in case of success
+	 * 			NOT_FOUND if the postId does not match an existing post or the user does not exists
+	 * 			FORBIDDEN if the password is not correct
+	 * 			CONFLICT if the user had not made an downvote on this post previously
+	 *			BAD_REQUEST otherwise
+	 */
 	@PUT
 	@Path("{" + POSTID + "}/" + DOWNVOTE + "/{" + USERID + "}" )
 	public void removeDownVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
+	/**
+	 * Exposes the number of upvotes currently associated with a given post
+	 * @param postId the post that is targeted by this operation
+	 * @return	OK and the number of upvotes in case of success
+	 * 			NOT_FOUND if the postId does not match an existing post
+	 */
 	@GET
 	@Path("{" + POSTID + "}/" + UPVOTE)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Integer getupVotes(@PathParam(POSTID) String postId);
 	
+	/**
+	 * Exposes the number of downvotes currently associated with a given post
+	 * @param postId the post that is targeted by this operation
+	 * @return	OK and the number of downvotes in case of success
+	 * 			NOT_FOUND if the postId does not match an existing post
+	 */
 	@GET
 	@Path("{" + POSTID + "}/" + DOWNVOTE)
 	@Consumes(MediaType.APPLICATION_JSON)
