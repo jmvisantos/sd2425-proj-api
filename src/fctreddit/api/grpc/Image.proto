@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_package = "fctreddit.impl.grpc.generated_java";
+option java_outer_classname = "ImageProtoBuf";
+
+service Image {
+	
+	rpc createImage( CreateImageArgs ) returns ( CreateImageResult ) {}
+	
+	rpc getImage( GetImageArgs ) returns ( GetImageResult ) {}
+
+	rpc deleteImage( DeleteImageArgs ) returns ( DeleteImageResult ) {}
+	 
+}
+
+message CreateImageArgs {
+	string userId = 1;
+	bytes imageContents = 2;
+	optional string password = 3;
+}
+
+message CreateImageResult {
+	string imageId = 1;
+}
+
+message GetImageArgs {
+	string imageId = 1;
+}
+
+message GetImageResult {
+	bytes data = 1;
+}
+
+message DeleteImageArgs {
+	string userId = 1;
+	string imageId = 2;
+	optional string password = 3;
+}
+
+message DeleteImageResult {
+}

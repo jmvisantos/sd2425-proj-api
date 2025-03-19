@@ -16,6 +16,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.14.0</version>
 				<configuration>
+					<release>17</release>
 					<source>17</source>
 					<target>17</target>
 				</configuration>
@@ -36,7 +37,7 @@
 				<configuration>
 					<protocArtifact>com.google.protobuf:protoc:3.21.4</protocArtifact>
 					<inputDirectories>
-						<include>${project.basedir}/src/tukano/api/grpc</include>
+						<include>${project.basedir}/src/fctreddit/api/grpc</include>
 					</inputDirectories>
 
 					<outputDirectory>src/</outputDirectory>

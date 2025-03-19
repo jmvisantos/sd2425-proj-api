@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+option java_package = "fctreddit.impl.grpc.generated_java";
+option java_outer_classname = "ContentProtoBuf";
+
+service Image {
+
+	rpc createPost ( CreatePostArgs ) returns ( CreatePostResult ) {}
+	
+	rpc getPosts ( GetPostsArgs ) returns ( stream GetPostsResult ) {}
+
+	rpc getPost ( GetPostArgs ) returns ( GrpcPost ) {}
+	
+	rpc getPostAnswers ( GetPostArgs ) returns ( stream GetPostsResult ) {}
+
+	rpc updatePost ( UpdatePostArgs ) returns ( GrpcPost ) {}
+
+	rpc deletePost ( DeletePostArgs ) returns ( EmptyMessage ) {}
+
+	rpc upVotePost ( ChangeVoteArgs ) returns ( EmptyMessage ) {}
+	
+	rpc removeUpVotePost ( ChangeVoteArgs ) returns ( EmptyMessage ) {}
+	
+	rpc downVotePost ( ChangeVoteArgs ) returns ( EmptyMessage ) {}
+	
+	rpc removeDownVotePost ( ChangeVoteArgs ) returns ( EmptyMessage ) {}
+
+	rpc getUpVotes ( GetPostArgs ) returns ( VoteCountResult ) {}
+	
+	rpc getDownVotes ( GetPostArgs ) returns ( VoteCountResult ) {}
+}
+
+message GrpcPost {
+	optional string postId = 1;
+	optional string authorId = 2;
+	optional int64 creationTimestamp = 3;
+	optional string content = 4;
+	optional string mediaUrl = 5;
+	optional string parentUrl = 6;
+	optional int32 upVote = 7;
+	optional int32 downVote = 8;
+}
+
+message CreatePostArgs {
+	GrpcPost post = 1;
+	optional string password = 2;
+}
+
+message CreatePostResult {
+	string postId = 1;
+}
+
+message GetPostsArgs {
+	optional int64 timestamp = 1;
+	optional string sortOrder = 2;
+}
+
+message GetPostsResult {
+    string postId = 1;
+}
+
+message GetPostArgs {
+	string postId = 1;
+}
+
+message UpdatePostArgs {
+	string postId = 1;
+	optional string password = 2;
+	GrpcPost post = 3;
+}
+
+message DeletePostArgs {
+	string postId = 1;
+	optional string password = 2;
+}
+
+message ChangeVoteArgs {
+	string postId = 1;
+	string userId = 2;
+	optional string password = 3;
+}
+
+message EmptyMessage {
+}
+
+message VoteCountResult {
+	int32 count = 1;
+}
