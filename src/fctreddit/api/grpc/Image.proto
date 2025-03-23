@@ -7,7 +7,7 @@ service Image {
 	
 	rpc createImage( CreateImageArgs ) returns ( CreateImageResult ) {}
 	
-	rpc getImage( GetImageArgs ) returns ( GetImageResult ) {}
+	rpc getImage( GetImageArgs ) returns ( stream GetImageResult ) {}
 
 	rpc deleteImage( DeleteImageArgs ) returns ( DeleteImageResult ) {}
 	 

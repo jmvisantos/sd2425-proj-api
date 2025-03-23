@@ -53,7 +53,7 @@ public final class ImageGrpc {
       fullMethodName = SERVICE_NAME + '/' + "getImage",
       requestType = fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs.class,
       responseType = fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
   public static io.grpc.MethodDescriptor<fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs,
       fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult> getGetImageMethod() {
     io.grpc.MethodDescriptor<fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs, fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult> getGetImageMethod;
@@ -62,7 +62,7 @@ public final class ImageGrpc {
         if ((getGetImageMethod = ImageGrpc.getGetImageMethod) == null) {
           ImageGrpc.getGetImageMethod = getGetImageMethod =
               io.grpc.MethodDescriptor.<fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs, fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getImage"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -217,7 +217,7 @@ public final class ImageGrpc {
      */
     public void getImage(fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs request,
         io.grpc.stub.StreamObserver<fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getGetImageMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -255,8 +255,9 @@ public final class ImageGrpc {
 
     /**
      */
-    public fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult getImage(fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+    public java.util.Iterator<fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult> getImage(
+        fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs request) {
+      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getGetImageMethod(), getCallOptions(), request);
     }
 
@@ -290,14 +291,6 @@ public final class ImageGrpc {
         fctreddit.impl.grpc.generated_java.ImageProtoBuf.CreateImageArgs request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getCreateImageMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult> getImage(
-        fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
-          getChannel().newCall(getGetImageMethod(), getCallOptions()), request);
     }
 
     /**
@@ -369,7 +362,7 @@ public final class ImageGrpc {
                 service, METHODID_CREATE_IMAGE)))
         .addMethod(
           getGetImageMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
+          io.grpc.stub.ServerCalls.asyncServerStreamingCall(
             new MethodHandlers<
               fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs,
               fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageResult>(

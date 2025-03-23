@@ -3721,16 +3721,29 @@ public final class ContentProtoBuf {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string postId = 1;</code>
-     * @return The postId.
+     * <code>repeated string postId = 1;</code>
+     * @return A list containing the postId.
      */
-    java.lang.String getPostId();
+    java.util.List<java.lang.String>
+        getPostIdList();
     /**
-     * <code>string postId = 1;</code>
-     * @return The bytes for postId.
+     * <code>repeated string postId = 1;</code>
+     * @return The count of postId.
+     */
+    int getPostIdCount();
+    /**
+     * <code>repeated string postId = 1;</code>
+     * @param index The index of the element to return.
+     * @return The postId at the given index.
+     */
+    java.lang.String getPostId(int index);
+    /**
+     * <code>repeated string postId = 1;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the postId at the given index.
      */
     com.google.protobuf.ByteString
-        getPostIdBytes();
+        getPostIdBytes(int index);
   }
   /**
    * Protobuf type {@code GetPostsResult}
@@ -3745,7 +3758,7 @@ public final class ContentProtoBuf {
       super(builder);
     }
     private GetPostsResult() {
-      postId_ = "";
+      postId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -3768,6 +3781,7 @@ public final class ContentProtoBuf {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -3780,8 +3794,11 @@ public final class ContentProtoBuf {
               break;
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
-
-              postId_ = s;
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                postId_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              postId_.add(s);
               break;
             }
             default: {
@@ -3801,6 +3818,9 @@ public final class ContentProtoBuf {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          postId_ = postId_.getUnmodifiableView();
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -3819,41 +3839,38 @@ public final class ContentProtoBuf {
     }
 
     public static final int POSTID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object postId_;
+    private com.google.protobuf.LazyStringList postId_;
     /**
-     * <code>string postId = 1;</code>
-     * @return The postId.
+     * <code>repeated string postId = 1;</code>
+     * @return A list containing the postId.
      */
-    @java.lang.Override
-    public java.lang.String getPostId() {
-      java.lang.Object ref = postId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        postId_ = s;
-        return s;
-      }
+    public com.google.protobuf.ProtocolStringList
+        getPostIdList() {
+      return postId_;
     }
     /**
-     * <code>string postId = 1;</code>
-     * @return The bytes for postId.
+     * <code>repeated string postId = 1;</code>
+     * @return The count of postId.
      */
-    @java.lang.Override
+    public int getPostIdCount() {
+      return postId_.size();
+    }
+    /**
+     * <code>repeated string postId = 1;</code>
+     * @param index The index of the element to return.
+     * @return The postId at the given index.
+     */
+    public java.lang.String getPostId(int index) {
+      return postId_.get(index);
+    }
+    /**
+     * <code>repeated string postId = 1;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the postId at the given index.
+     */
     public com.google.protobuf.ByteString
-        getPostIdBytes() {
-      java.lang.Object ref = postId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        postId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+        getPostIdBytes(int index) {
+      return postId_.getByteString(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3870,8 +3887,8 @@ public final class ContentProtoBuf {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(postId_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, postId_);
+      for (int i = 0; i < postId_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, postId_.getRaw(i));
       }
       unknownFields.writeTo(output);
     }
@@ -3882,8 +3899,13 @@ public final class ContentProtoBuf {
       if (size != -1) return size;
 
       size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(postId_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, postId_);
+      {
+        int dataSize = 0;
+        for (int i = 0; i < postId_.size(); i++) {
+          dataSize += computeStringSizeNoTag(postId_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getPostIdList().size();
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3900,8 +3922,8 @@ public final class ContentProtoBuf {
       }
       fctreddit.impl.grpc.generated_java.ContentProtoBuf.GetPostsResult other = (fctreddit.impl.grpc.generated_java.ContentProtoBuf.GetPostsResult) obj;
 
-      if (!getPostId()
-          .equals(other.getPostId())) return false;
+      if (!getPostIdList()
+          .equals(other.getPostIdList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3913,8 +3935,10 @@ public final class ContentProtoBuf {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + POSTID_FIELD_NUMBER;
-      hash = (53 * hash) + getPostId().hashCode();
+      if (getPostIdCount() > 0) {
+        hash = (37 * hash) + POSTID_FIELD_NUMBER;
+        hash = (53 * hash) + getPostIdList().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -4048,8 +4072,8 @@ public final class ContentProtoBuf {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        postId_ = "";
-
+        postId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
@@ -4076,6 +4100,11 @@ public final class ContentProtoBuf {
       @java.lang.Override
       public fctreddit.impl.grpc.generated_java.ContentProtoBuf.GetPostsResult buildPartial() {
         fctreddit.impl.grpc.generated_java.ContentProtoBuf.GetPostsResult result = new fctreddit.impl.grpc.generated_java.ContentProtoBuf.GetPostsResult(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          postId_ = postId_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
         result.postId_ = postId_;
         onBuilt();
         return result;
@@ -4125,8 +4154,14 @@ public final class ContentProtoBuf {
 
       public Builder mergeFrom(fctreddit.impl.grpc.generated_java.ContentProtoBuf.GetPostsResult other) {
         if (other == fctreddit.impl.grpc.generated_java.ContentProtoBuf.GetPostsResult.getDefaultInstance()) return this;
-        if (!other.getPostId().isEmpty()) {
-          postId_ = other.postId_;
+        if (!other.postId_.isEmpty()) {
+          if (postId_.isEmpty()) {
+            postId_ = other.postId_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensurePostIdIsMutable();
+            postId_.addAll(other.postId_);
+          }
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -4157,79 +4192,114 @@ public final class ContentProtoBuf {
         }
         return this;
       }
+      private int bitField0_;
 
-      private java.lang.Object postId_ = "";
-      /**
-       * <code>string postId = 1;</code>
-       * @return The postId.
-       */
-      public java.lang.String getPostId() {
-        java.lang.Object ref = postId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          postId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      private com.google.protobuf.LazyStringList postId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensurePostIdIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          postId_ = new com.google.protobuf.LazyStringArrayList(postId_);
+          bitField0_ |= 0x00000001;
+         }
       }
       /**
-       * <code>string postId = 1;</code>
-       * @return The bytes for postId.
+       * <code>repeated string postId = 1;</code>
+       * @return A list containing the postId.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getPostIdList() {
+        return postId_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string postId = 1;</code>
+       * @return The count of postId.
+       */
+      public int getPostIdCount() {
+        return postId_.size();
+      }
+      /**
+       * <code>repeated string postId = 1;</code>
+       * @param index The index of the element to return.
+       * @return The postId at the given index.
+       */
+      public java.lang.String getPostId(int index) {
+        return postId_.get(index);
+      }
+      /**
+       * <code>repeated string postId = 1;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the postId at the given index.
        */
       public com.google.protobuf.ByteString
-          getPostIdBytes() {
-        java.lang.Object ref = postId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          postId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+          getPostIdBytes(int index) {
+        return postId_.getByteString(index);
       }
       /**
-       * <code>string postId = 1;</code>
+       * <code>repeated string postId = 1;</code>
+       * @param index The index to set the value at.
        * @param value The postId to set.
        * @return This builder for chaining.
        */
       public Builder setPostId(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensurePostIdIsMutable();
+        postId_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string postId = 1;</code>
+       * @param value The postId to add.
+       * @return This builder for chaining.
+       */
+      public Builder addPostId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  
-        postId_ = value;
+  ensurePostIdIsMutable();
+        postId_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>string postId = 1;</code>
+       * <code>repeated string postId = 1;</code>
+       * @param values The postId to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllPostId(
+          java.lang.Iterable<java.lang.String> values) {
+        ensurePostIdIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, postId_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string postId = 1;</code>
        * @return This builder for chaining.
        */
       public Builder clearPostId() {
-        
-        postId_ = getDefaultInstance().getPostId();
+        postId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
       /**
-       * <code>string postId = 1;</code>
-       * @param value The bytes for postId to set.
+       * <code>repeated string postId = 1;</code>
+       * @param value The bytes of the postId to add.
        * @return This builder for chaining.
        */
-      public Builder setPostIdBytes(
+      public Builder addPostIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
-        postId_ = value;
+        ensurePostIdIsMutable();
+        postId_.add(value);
         onChanged();
         return this;
       }
@@ -8462,7 +8532,7 @@ public final class ContentProtoBuf {
       "stResult\022\016\n\006postId\030\001 \001(\t\"Z\n\014GetPostsArgs" +
       "\022\026\n\ttimestamp\030\001 \001(\003H\000\210\001\001\022\026\n\tsortOrder\030\002 " +
       "\001(\tH\001\210\001\001B\014\n\n_timestampB\014\n\n_sortOrder\" \n\016" +
-      "GetPostsResult\022\016\n\006postId\030\001 \001(\t\"\035\n\013GetPos" +
+      "GetPostsResult\022\016\n\006postId\030\001 \003(\t\"\035\n\013GetPos" +
       "tArgs\022\016\n\006postId\030\001 \001(\t\"]\n\016UpdatePostArgs\022" +
       "\016\n\006postId\030\001 \001(\t\022\025\n\010password\030\002 \001(\tH\000\210\001\001\022\027" +
       "\n\004post\030\003 \001(\0132\t.GrpcPostB\013\n\t_password\"D\n\016" +
@@ -8471,23 +8541,23 @@ public final class ContentProtoBuf {
       "Args\022\016\n\006postId\030\001 \001(\t\022\016\n\006userId\030\002 \001(\t\022\025\n\010" +
       "password\030\003 \001(\tH\000\210\001\001B\013\n\t_password\"\016\n\014Empt" +
       "yMessage\" \n\017VoteCountResult\022\r\n\005count\030\001 \001" +
-      "(\0052\324\004\n\005Image\0222\n\ncreatePost\022\017.CreatePostA" +
-      "rgs\032\021.CreatePostResult\"\000\022.\n\010getPosts\022\r.G" +
-      "etPostsArgs\032\017.GetPostsResult\"\0000\001\022$\n\007getP" +
-      "ost\022\014.GetPostArgs\032\t.GrpcPost\"\000\0223\n\016getPos" +
+      "(\0052\322\004\n\007Content\0222\n\ncreatePost\022\017.CreatePos" +
+      "tArgs\032\021.CreatePostResult\"\000\022,\n\010getPosts\022\r" +
+      ".GetPostsArgs\032\017.GetPostsResult\"\000\022$\n\007getP" +
+      "ost\022\014.GetPostArgs\032\t.GrpcPost\"\000\0221\n\016getPos" +
       "tAnswers\022\014.GetPostArgs\032\017.GetPostsResult\"" +
-      "\0000\001\022*\n\nupdatePost\022\017.UpdatePostArgs\032\t.Grp" +
-      "cPost\"\000\022.\n\ndeletePost\022\017.DeletePostArgs\032\r" +
-      ".EmptyMessage\"\000\022.\n\nupVotePost\022\017.ChangeVo" +
-      "teArgs\032\r.EmptyMessage\"\000\0224\n\020removeUpVoteP" +
-      "ost\022\017.ChangeVoteArgs\032\r.EmptyMessage\"\000\0220\n" +
-      "\014downVotePost\022\017.ChangeVoteArgs\032\r.EmptyMe" +
-      "ssage\"\000\0226\n\022removeDownVotePost\022\017.ChangeVo" +
-      "teArgs\032\r.EmptyMessage\"\000\022.\n\ngetUpVotes\022\014." +
-      "GetPostArgs\032\020.VoteCountResult\"\000\0220\n\014getDo" +
-      "wnVotes\022\014.GetPostArgs\032\020.VoteCountResult\"" +
-      "\000B5\n\"fctreddit.impl.grpc.generated_javaB" +
-      "\017ContentProtoBufb\006proto3"
+      "\000\022*\n\nupdatePost\022\017.UpdatePostArgs\032\t.GrpcP" +
+      "ost\"\000\022.\n\ndeletePost\022\017.DeletePostArgs\032\r.E" +
+      "mptyMessage\"\000\022.\n\nupVotePost\022\017.ChangeVote" +
+      "Args\032\r.EmptyMessage\"\000\0224\n\020removeUpVotePos" +
+      "t\022\017.ChangeVoteArgs\032\r.EmptyMessage\"\000\0220\n\014d" +
+      "ownVotePost\022\017.ChangeVoteArgs\032\r.EmptyMess" +
+      "age\"\000\0226\n\022removeDownVotePost\022\017.ChangeVote" +
+      "Args\032\r.EmptyMessage\"\000\022.\n\ngetUpVotes\022\014.Ge" +
+      "tPostArgs\032\020.VoteCountResult\"\000\0220\n\014getDown" +
+      "Votes\022\014.GetPostArgs\032\020.VoteCountResult\"\000B" +
+      "5\n\"fctreddit.impl.grpc.generated_javaB\017C" +
+      "ontentProtoBufb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

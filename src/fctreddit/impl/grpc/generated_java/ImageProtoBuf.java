@@ -3849,13 +3849,13 @@ public final class ImageProtoBuf {
       "\t\"\036\n\016GetImageResult\022\014\n\004data\030\001 \001(\014\"V\n\017Del" +
       "eteImageArgs\022\016\n\006userId\030\001 \001(\t\022\017\n\007imageId\030" +
       "\002 \001(\t\022\025\n\010password\030\003 \001(\tH\000\210\001\001B\013\n\t_passwor" +
-      "d\"\023\n\021DeleteImageResult2\243\001\n\005Image\0225\n\013crea" +
+      "d\"\023\n\021DeleteImageResult2\245\001\n\005Image\0225\n\013crea" +
       "teImage\022\020.CreateImageArgs\032\022.CreateImageR" +
-      "esult\"\000\022,\n\010getImage\022\r.GetImageArgs\032\017.Get" +
-      "ImageResult\"\000\0225\n\013deleteImage\022\020.DeleteIma" +
-      "geArgs\032\022.DeleteImageResult\"\000B3\n\"fctreddi" +
-      "t.impl.grpc.generated_javaB\rImageProtoBu" +
-      "fb\006proto3"
+      "esult\"\000\022.\n\010getImage\022\r.GetImageArgs\032\017.Get" +
+      "ImageResult\"\0000\001\0225\n\013deleteImage\022\020.DeleteI" +
+      "mageArgs\032\022.DeleteImageResult\"\000B3\n\"fctred" +
+      "dit.impl.grpc.generated_javaB\rImageProto" +
+      "Bufb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
