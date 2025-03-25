@@ -88,6 +88,8 @@ public interface Content {
 	 * 			NOT_FOUND if postId does not match an existing post
 	 * 			FORBIDDEN if the password is not correct (it should always be considered the authorId 
 	 * 					  of the post as the user that is attempting to execute this operation);
+	 *			CONFLICT  if this post already has any other content referencing it (is the parent of
+	 *					  another post or if there is at least one upvote or a downvote to this post.
 	 */	
 	public Result<Void> deletePost(String postId, String userPassword);
 	
