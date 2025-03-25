@@ -21,8 +21,9 @@ service Users {
 message GrpcUser {
 	optional string userId = 1;
 	optional string email = 2;
-	optional string displayName = 3;
+	optional string fullName = 3;
 	optional string password = 4;
+	optional string avatarUrl = 5;
 }
 
 
