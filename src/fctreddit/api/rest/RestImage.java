@@ -49,7 +49,8 @@ public interface RestImage {
 	 * @param imageId the identifier of the image
 	 * @return 	NO_CONTENT in the case of success. 
 	 * 			NOT_FOUND if the image or user does not exists
-	 * 			FORBIDDEN if user password is incorrect
+	 * 			FORBIDDEN if user password is incorrect or the user attempting 
+	 * 					  to make the operation is not the owner of the image
 	 * 		   	BAD_REQUEST password is null
 	 */
 	@DELETE

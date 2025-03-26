@@ -139,11 +139,11 @@ public interface RestContent {
 	 * @param userPassword Password of user making the upvote
 	 * @return 	NO_CONTENT in case of success
 	 * 			NOT_FOUND if the postId does not match an existing post or the user does not exists
-	 * 			FORBIDDEN if the password is not correct
+	 * 			FORBIDDEN if the password is not correct or the user doing the operation is not the owner
 	 * 			CONFLICT if the user already has made an upvote or downvote on the post
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@POST
 	@Path("{" + POSTID + "}/" + UPVOTE + "/{" + USERID + "}" )
 	public void upVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
@@ -159,7 +159,7 @@ public interface RestContent {
 	 * 			CONFLICT if the user had not made an upvote on this post previously
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@DELETE
 	@Path("{" + POSTID + "}/" + UPVOTE + "/{" + USERID + "}" )
 	public void removeUpVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
@@ -177,7 +177,7 @@ public interface RestContent {
 	 * 			CONFLICT if the user already has made an upvote or downvote on the post
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@POST
 	@Path("{" + POSTID + "}/" + DOWNVOTE + "/{" + USERID + "}" )
 	public void downVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
@@ -193,7 +193,7 @@ public interface RestContent {
 	 * 			CONFLICT if the user had not made an downvote on this post previously
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@DELETE
 	@Path("{" + POSTID + "}/" + DOWNVOTE + "/{" + USERID + "}" )
 	public void removeDownVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
