@@ -41,7 +41,7 @@ public interface RestImage {
 	@GET
 	@Path("{" + USER_ID + "}/{" + IMAGE_ID + "}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	byte[] getImage(@PathParam(IMAGE_ID) String imageId);
+	byte[] getImage(@PathParam(USER_ID) String userId, @PathParam(IMAGE_ID) String imageId);
 	
 	/**
 	 * Deletes an image identified by imageId
