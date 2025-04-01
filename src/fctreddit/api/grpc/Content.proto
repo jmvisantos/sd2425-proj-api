@@ -56,7 +56,7 @@ message GetPostsArgs {
 }
 
 message GetPostsResult {
-    repeated string postId = 1;
+    	repeated string postId = 1;
 }
 
 message GetPostArgs {

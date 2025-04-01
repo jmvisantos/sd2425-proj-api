@@ -43,8 +43,9 @@ public interface Users {
 	Result<User> updateUser(String userId, String password, User user);
 
 	/**
-	 * Deletes the user identified by userId. The spreadsheets owned by the user
-	 * should be eventually removed (asynchronous deletion is ok).
+	 * Deletes the user identified by userId. All posts of that user should have the
+	 * authorId set to null, all upvotes and downvotes of the user should be removed
+	 * and if the user has an avatar that avatar should be also removed.
 	 * 
 	 * @param nauserId the userId of the user
 	 * @param password password of the user
@@ -60,8 +61,8 @@ public interface Users {
 	 * query must be set to the empty string "".
 	 * 
 	 * @param pattern substring to search (empty pattern translates to all users)
-	 * @return <OK,List<User>> and the list of Users matching the search, regardless of the number of hits
-	 *         (including 0 hits)
+	 * @return <OK,List<User>> and the list of Users matching the search, regardless 
+	 * 		    of the number of hits (including 0 hits)
 	 */
 	Result<List<User>> searchUsers(String pattern);
 }
