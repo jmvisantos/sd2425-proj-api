@@ -8,7 +8,7 @@ for %%x in (%*) do Set /A argC+=1
 
 if %argC% LEQ 1 echo "usage: $0 -image <img> [ -test <num> ] [ -log OFF|ALL|FINE ] [ -sleep <seconds> ]" & GOTO END
 
-docker pull nunopreguica/sd2324-tester-tp1
-docker run --rm --network=sdnet -it -v /var/run/docker.sock:/var/run/docker.sock nunopreguica/sd2324-tester-tp1 %*
+docker pull smduarte/sd2425-tester-tp1
+docker run --rm --network=sdnet -it -v /var/run/docker.sock:/var/run/docker.sock nunopreguica/sd2425-tester-tp1 %*
 
 :END
