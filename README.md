@@ -1,4 +1,4 @@
-# SD2426 project
+# SD2425 project
 
 This repository includes the API and a set of files that should be used in project 1.
 
