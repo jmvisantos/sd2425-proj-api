@@ -58,11 +58,17 @@ public interface Content {
 	 * Retrieves a list with all unique identifiers of posts that have the post
 	 * identified by the postId as their ancestor (i.e., the replies to that post),
 	 * the order should be the creation order of those posts.
-	 * @return 	OK and the List of PostIds that match all options in the right order 
+	 * @param postId the postId for which answers want to be obtained
+	 * @param timeout (optional) indicates the maximum amount of time that this operation should
+	 * 		  wait (before returning a reply to the client) for a new answer to be added
+	 * 		  to the post. If a new answer is added to the target post after the start of 
+	 * 		  the execution of this operation and before the timeout expires an answer should
+	 * 		  be sent to the client at that time. 		   
+	 * @return 	OK and the List of PostIds that are answers to the post ordered by creationTime 
 	 * 			NOT_FOUND if postId does not match an existing Post	
 	 * 		
 	 */
-	public Result<List<String>> getPostAnswers(String postId);
+	public Result<List<String>> getPostAnswers(String postId, long maxTimeout);
 	
 	/**
 	 * Updates the contents of a post restricted to the fields:

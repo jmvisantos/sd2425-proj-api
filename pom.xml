@@ -105,17 +105,17 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>3.1.5</version>
+			<version>3.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-jdk-http</artifactId>
-			<version>3.1.5</version>
+			<version>3.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
-			<version>3.1.5</version>
+			<version>3.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
