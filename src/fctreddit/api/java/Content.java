@@ -39,7 +39,7 @@ public interface Content {
 	 * @param sortOrder this is an optional parameter, the admissible values are on constants MOST_UP_VOTES
 	 * and MOST_REPLIES, if the first is indicated, posts IDs should be ordered from the Post with more votes
 	 * to the one with less votes. If the second is provided posts IDs should be ordered from the Post with 
-	 * more replies to the one with less replies.
+	 * more direct replies to the one with less direct replies.
 	 * @return 	OK and the List of PostIds that match all options in the right order 
 	 * 			
 	 */
