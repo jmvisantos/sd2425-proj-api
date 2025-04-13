@@ -1,10 +1,11 @@
 package fctreddit.client;
 
+import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import java.util.logging.Logger;
 
 import fctreddit.client.rest.RestUsersClient;
+
 
 public class SearchUserClient {
 
@@ -12,7 +13,7 @@ public class SearchUserClient {
 
 	public static void main(String[] args) {
 		
-		if ( args.length != 2 ) {
+		if( args.length != 2 ) {
 			System.err.println( "Use: java " + SearchUserClient.class.getCanonicalName() + " url query" );
 			return;
 		}
@@ -26,12 +27,10 @@ public class SearchUserClient {
 		var result =  client.searchUsers(query);
 
 		if( result.isOK() ) {
-			@SuppressWarnings("unchecked")
-			var userList = (List<String>) result.value();
-			Log.info("Found the following users in the database: ");
-			userList.forEach(System.out::println);
+			var users = result.value();
+			Log.info("  ");
 		} else {
-			System.out.println("Error, HTTP error status: " + result.error());
+			System.out.println("Error, HTTP error status: " + result.getError());
 		}
 	}
 	

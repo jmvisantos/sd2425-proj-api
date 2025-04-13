@@ -109,8 +109,6 @@ public class RestUsersClient<E> {
 		});
 	}
 
-
-
 	public Result<List<User>> searchUsers(String pattern) {
 		return repeated(() -> {
 			Response response = target.path("/").queryParam(RestUsers.QUERY, pattern).request()
@@ -131,7 +129,6 @@ public class RestUsersClient<E> {
 		case 403 -> ErrorCode.FORBIDDEN;
 		case 404 -> ErrorCode.NOT_FOUND;
 		case 400 -> ErrorCode.BAD_REQUEST;
-		case 500 -> ErrorCode.INTERNAL_ERROR;
 		case 501 -> ErrorCode.NOT_IMPLEMENTED;
 		default -> ErrorCode.INTERNAL_ERROR;
 		};
