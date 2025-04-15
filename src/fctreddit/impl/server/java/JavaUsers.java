@@ -59,12 +59,13 @@ public class JavaUsers implements Users {
 		Log.info("getUser : user = " + userId + "; pwd = " + password);
 
 		// Check if user is valid
-		if (userId == null || password == null) {
+		if (userId == null || password == null ||  password.isEmpty()) {
 			Log.info("UserId or password null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
 		
 		User user = null;
+		
 		try {
 			user = hibernate.get(User.class, userId);
 		} catch (Exception e) {
@@ -93,7 +94,7 @@ public class JavaUsers implements Users {
 		Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; userData = " + user);
 		
 		// Check if user is valid
-		if (userId == null || password == null || user == null) {
+		if (userId == null || password == null || user == null || password.isEmpty()) {
 			Log.info("UserId or password null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
@@ -137,7 +138,7 @@ public class JavaUsers implements Users {
 		Log.info("deleteUser : user = " + userId + "; pwd = " + password);
 
 		// Check if user is valid
-		if (userId == null || password == null) {
+		if (userId == null || password == null || password.isEmpty()) {
 			Log.info("UserId or password null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
