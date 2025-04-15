@@ -1,4 +1,4 @@
-package fctreddit.clients.java;
+package fctreddit.client.java;
 
 import java.util.List;
 

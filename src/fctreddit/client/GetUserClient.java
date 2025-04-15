@@ -1,4 +1,4 @@
-package fctreddit.clients;
+package fctreddit.client;
 
 import java.io.IOException;
 import java.net.URI;
@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 
 import fctreddit.api.User;
 import fctreddit.api.java.Result;
-import fctreddit.clients.grpc.GrpcUsersClient;
-import fctreddit.clients.java.UsersClient;
-import fctreddit.clients.rest.RestUsersClient;
+import fctreddit.client.grpc.GrpcUsersClient;
+import fctreddit.client.java.UsersClient;
+import fctreddit.client.rest.RestUsersClient;
 
 public class GetUserClient {
 	

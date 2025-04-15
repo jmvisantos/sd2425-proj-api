@@ -1,4 +1,4 @@
-package fctreddit.clients.rest;
+package fctreddit.client.rest;
 
 import java.net.URI;
 import java.util.List;
@@ -11,7 +11,7 @@ import fctreddit.api.User;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
 import fctreddit.api.rest.RestUsers;
-import fctreddit.clients.java.UsersClient;
+import fctreddit.client.java.UsersClient;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;

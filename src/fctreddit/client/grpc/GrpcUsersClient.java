@@ -1,4 +1,4 @@
-package fctreddit.clients.grpc;
+package fctreddit.client.grpc;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -15,18 +15,18 @@ import io.grpc.internal.PickFirstLoadBalancerProvider;
 import fctreddit.api.User;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
-import fctreddit.clients.java.UsersClient;
+import fctreddit.client.java.UsersClient;
 import fctreddit.impl.grpc.generated_java.UsersGrpc;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.CreateUserArgs;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.CreateUserResult;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.DeleteUserArgs;
-import fctreddit.impl.grpc.generated_java.UsersProtoBuf.DeleteUserResult;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserArgs;
-import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserResult;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GrpcUser;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.SearchUserArgs;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.UpdateUserArgs;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.UpdateUserResult;
+import fctreddit.impl.grpc.generated_java.UsersProtoBuf.DeleteUserResult;
+import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserResult;
 import fctreddit.impl.grpc.util.DataModelAdaptor;
 
 public class GrpcUsersClient extends UsersClient {
