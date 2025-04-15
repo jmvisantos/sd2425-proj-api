@@ -130,7 +130,8 @@ public class Discovery {
 					if (msgElems.length == 2) { // periodic announcement
 						System.out.printf("FROM %s (%s) : %s\n", pkt.getAddress().getHostName(),
 								pkt.getAddress().getHostAddress(), msg);
-						// TODO: to complete by recording the received information
+						// to complete by recording the received information
+						
 						String receivedServiceName = msgElems[0];
             URI receivedServiceURI = URI.create(msgElems[1]);
 						serviceURIs.computeIfAbsent(receivedServiceName, k -> new ConcurrentLinkedQueue<>()).add(receivedServiceURI);
@@ -160,7 +161,7 @@ public class Discovery {
 		synchronized (uris) {
 			while (uris.size() < minReplies) {
 				try {
-					uris.wait();
+					Thread.sleep(DISCOVERY_RETRY_TIMEOUT);
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 					return new URI[0];

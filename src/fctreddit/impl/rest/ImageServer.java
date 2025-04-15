@@ -1,4 +1,4 @@
-package fctreddit.server.rest;
+package fctreddit.impl.rest;
 
 import java.net.InetAddress;
 import java.net.URI;
@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+
+import fctreddit.impl.Discovery;
 
 public class ImageServer {
 
@@ -30,6 +32,9 @@ public class ImageServer {
 		String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 	
+		Discovery discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
+		discovery.start();
+
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
 		
 		//More code can be executed here...
