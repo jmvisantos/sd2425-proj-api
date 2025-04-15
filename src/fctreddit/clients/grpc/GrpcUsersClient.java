@@ -20,13 +20,13 @@ import fctreddit.impl.grpc.generated_java.UsersGrpc;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.CreateUserArgs;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.CreateUserResult;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.DeleteUserArgs;
+import fctreddit.impl.grpc.generated_java.UsersProtoBuf.DeleteUserResult;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserArgs;
+import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserResult;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GrpcUser;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.SearchUserArgs;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.UpdateUserArgs;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.UpdateUserResult;
-import fctreddit.impl.grpc.generated_java.UsersProtoBuf.DeleteUserResult;
-import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserResult;
 import fctreddit.impl.grpc.util.DataModelAdaptor;
 
 public class GrpcUsersClient extends UsersClient {
