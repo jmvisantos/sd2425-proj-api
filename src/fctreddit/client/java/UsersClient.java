@@ -14,14 +14,19 @@ public abstract class UsersClient implements Users {
 	protected static final int MAX_RETRIES = 10;
 	protected static final int RETRY_SLEEP = 5000;
 	
+  @Override
 	abstract public Result<String> createUser(User user);
 
+	@Override
 	abstract public Result<User> getUser(String userId, String password);
 	
+	@Override
 	abstract public Result<User> updateUser(String userId, String password, User user);
 
+	@Override
 	abstract public Result<User> deleteUser(String userId, String password);
 
+	@Override
 	abstract public Result<List<User>> searchUsers(String pattern);
 
 }

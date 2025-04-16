@@ -14,18 +14,18 @@ public class JavaUsers implements Users {
 	private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
 	private Hibernate hibernate;
-	
+
 	public JavaUsers() {
 		hibernate = Hibernate.getInstance();
 	}
-	
+
 	@Override
 	public Result<String> createUser(User user) {
 		Log.info("createUser : " + user);
 
 		// Check if user data is valid
 		if (user.getUserId() == null || user.getPassword() == null || user.getFullName() == null
-				|| user.getEmail() == null || user.getPassword().isEmpty()){
+				|| user.getEmail() == null || user.getPassword().isEmpty()) {
 			Log.info("User object invalid.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
@@ -46,11 +46,11 @@ public class JavaUsers implements Users {
 		try {
 			hibernate.persist(user);
 		} catch (Exception e) {
-			e.printStackTrace(); //Most likely the exception is due to the user already existing...
+			e.printStackTrace(); // Most likely the exception is due to the user already existing...
 			Log.info("User already exists.");
 			return Result.error(ErrorCode.CONFLICT);
 		}
-		
+
 		return Result.ok(user.getUserId());
 	}
 
@@ -59,13 +59,18 @@ public class JavaUsers implements Users {
 		Log.info("getUser : user = " + userId + "; pwd = " + password);
 
 		// Check if user is valid
-		if (userId == null || password == null ||  password.isEmpty()) {
-			Log.info("UserId or password null.");
+		if (userId == null) {
+			Log.info("UserId null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
-		
+
+		if (password == null || password.isEmpty()) {
+			Log.info("Password is empty or null.");
+			return Result.error(ErrorCode.FORBIDDEN);
+		}
+
 		User user = null;
-		
+
 		try {
 			user = hibernate.get(User.class, userId);
 		} catch (Exception e) {
@@ -84,7 +89,7 @@ public class JavaUsers implements Users {
 			Log.info("Password is incorrect");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
-		
+
 		return Result.ok(user);
 
 	}
@@ -92,14 +97,20 @@ public class JavaUsers implements Users {
 	@Override
 	public Result<User> updateUser(String userId, String password, User user) {
 		Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; userData = " + user);
-		
+
 		// Check if user is valid
-		if (userId == null || password == null || user == null || password.isEmpty()) {
+		if (userId == null || user == null) {
 			Log.info("UserId or password null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
-		
+
+		if (password == null || password.isEmpty()) {
+			Log.info("Password is empty or null.");
+			return Result.error(ErrorCode.FORBIDDEN);
+		}
+
 		User existingUser = null;
+
 		try {
 			existingUser = hibernate.get(User.class, userId);
 		} catch (Exception e) {
@@ -118,17 +129,30 @@ public class JavaUsers implements Users {
 			Log.info("Password is incorrect");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
-		
-		existingUser.setFullName(user.getFullName());
-		existingUser.setEmail(user.getEmail());
-		
+
+		if (user.getFullName() != null) {
+			existingUser.setFullName(user.getFullName());
+		}
+
+		if (user.getEmail() != null) {
+			existingUser.setEmail(user.getEmail());
+		}
+
+		if (user.getPassword() != null) {
+			existingUser.setPassword(user.getPassword());
+		}
+
+		if (user.getAvatarUrl() != null) {
+			existingUser.setAvatarUrl(user.getAvatarUrl());
+		}
+
 		try {
 			hibernate.update(existingUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error(ErrorCode.INTERNAL_ERROR);
 		}
-		
+
 		return Result.ok(existingUser);
 
 	}
@@ -142,7 +166,7 @@ public class JavaUsers implements Users {
 			Log.info("UserId or password null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
-		
+
 		User user = null;
 		try {
 			user = hibernate.get(User.class, userId);
@@ -162,21 +186,32 @@ public class JavaUsers implements Users {
 			Log.info("Password is incorrect");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
-		
+
 		try {
 			hibernate.delete(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error(ErrorCode.INTERNAL_ERROR);
 		}
-		
+
 		return Result.ok(user);
 	}
 
 	@Override
-	public Result<List<User>> searchUsers(String pattern) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result<List<User>> searchUsers(String keyword) {
+		Log.info("searchUsers : keyword = " + keyword);
+
+		
+		List<User> users = null;
+
+		try {
+			String jpql = "SELECT u FROM User u WHERE u.userId LIKE '%" + keyword + "%'";
+			users = hibernate.jpql(jpql, User.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Result.error(ErrorCode.INTERNAL_ERROR);
+		}
+		return Result.ok(users);
 	}
 
 }
