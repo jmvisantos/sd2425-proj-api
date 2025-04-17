@@ -18,8 +18,8 @@ public class ImageServer {
 		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s\n");
 	}
 	
-	public static final int PORT = 8080;
-	public static final String SERVICE = "ImageService";
+	public static final int PORT = 8081;
+	public static final String SERVICE = "Image";
 	private static final String SERVER_URI_FMT = "http://%s:%s/rest";
 	
 	public static void main(String[] args) {
