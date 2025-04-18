@@ -64,19 +64,20 @@ public class Discovery {
 	 * @param serviceName the name of the service to announce
 	 * @param serviceURI  an uri string - representing the contact endpoint of the
 	 *                    service being announced
-	 * @throws IOException 
-	 * @throws UnknownHostException 
-	 * @throws SocketException 
+	 * @throws IOException
+	 * @throws UnknownHostException
+	 * @throws SocketException
 	 */
-	public Discovery(InetSocketAddress addr, String serviceName, String serviceURI) throws SocketException, UnknownHostException, IOException {
+	public Discovery(InetSocketAddress addr, String serviceName, String serviceURI)
+			throws SocketException, UnknownHostException, IOException {
 		this.addr = addr;
 		this.serviceName = serviceName;
 		this.serviceURI = serviceURI;
 
 		if (this.addr == null) {
 			throw new RuntimeException("A multinet address has to be provided.");
-		} 
-		
+		}
+
 		this.ms = new MulticastSocket(addr.getPort());
 		this.ms.joinGroup(addr, NetworkInterface.getByInetAddress(InetAddress.getLocalHost()));
 	}
@@ -87,11 +88,13 @@ public class Discovery {
 
 	/**
 	 * Starts sending service announcements at regular intervals...
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public void start() {
-		//If this discovery instance was initialized with information about a service, start the thread that makes the
-		//periodic announcement to the multicast address.
+		// If this discovery instance was initialized with information about a service,
+		// start the thread that makes the
+		// periodic announcement to the multicast address.
 		if (this.serviceName != null && this.serviceURI != null) {
 
 			Log.info(String.format("Starting Discovery announcements on: %s for: %s -> %s", addr, serviceName,
@@ -131,10 +134,11 @@ public class Discovery {
 						System.out.printf("FROM %s (%s) : %s\n", pkt.getAddress().getHostName(),
 								pkt.getAddress().getHostAddress(), msg);
 						// to complete by recording the received information
-						
+
 						String receivedServiceName = msgElems[0];
-            URI receivedServiceURI = URI.create(msgElems[1]);
-						serviceURIs.computeIfAbsent(receivedServiceName, k -> new ConcurrentLinkedQueue<>()).add(receivedServiceURI);
+						URI receivedServiceURI = URI.create(msgElems[1]);
+						serviceURIs.computeIfAbsent(receivedServiceName, k -> new ConcurrentLinkedQueue<>())
+								.add(receivedServiceURI);
 					}
 				} catch (IOException e) {
 					// do nothing

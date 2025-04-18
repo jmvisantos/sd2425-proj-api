@@ -1,6 +1,7 @@
 package fctreddit.impl.server.java;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -43,14 +44,24 @@ public class JavaContent implements Content {
 			}
 
 			String postId = UUID.randomUUID().toString();
-
-
-
-
-			//discord 
 			
+			try {
+				File userDir = new File(CONTENT_STORAGE_DIR, post.getAuthorId());
+				if (!userDir.exists()) {
+					userDir.mkdirs();
+				}
 
-			return null;
+				File postFile = new File(userDir, postId + ".post");
+				try (FileWriter writer = new FileWriter(postFile)) {
+					writer.write(post.toString());
+				}
+
+				return Result.ok(postId);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return Result.error(ErrorCode.INTERNAL_ERROR);
+			}
+
 		}
 
 		@Override

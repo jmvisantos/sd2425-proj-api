@@ -22,6 +22,8 @@ public class UsersServer {
 	public static final String SERVICE = "Users";
 	private static final String SERVER_URI_FMT = "http://%s:%s/rest";
 	
+	public static Discovery discovery;
+	public static String serverURI;
 	public static void main(String[] args) {
 		try {
 			
@@ -29,10 +31,10 @@ public class UsersServer {
 		config.register(UsersResource.class);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
-		String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
+		serverURI = String.format(SERVER_URI_FMT, ip, PORT);
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
-		Discovery discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
+		discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
 		discovery.start();
 	
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));

@@ -2,6 +2,7 @@ package fctreddit.impl.server.java;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,17 +13,39 @@ import fctreddit.api.User;
 import fctreddit.api.java.Image;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
-import fctreddit.api.java.Users;
+import fctreddit.client.java.UsersClient;
+import fctreddit.client.rest.RestUsersClient;
+import fctreddit.impl.Discovery;
+import fctreddit.impl.rest.UsersServer;
 
 public class JavaImage implements Image {
 
     private static final Logger Log = Logger.getLogger(JavaImage.class.getName());
     private static final String IMAGE_STORAGE_DIR = "images";
+    private UsersClient userServer;
 
-    private final Users userServer;
+    public JavaImage() {
+        try {
+            // Access the static Discovery instance from UsersServer
+            Discovery discovery = UsersServer.discovery;
 
-    public JavaImage(Users userServer) {
-        this.userServer = userServer;
+            if (discovery == null) {
+                throw new IllegalStateException("Discovery instance is not initialized in UsersServer!");
+            }
+
+            // Discover the Users service
+            URI[] usersURI = discovery.knownUrisOf(UsersServer.SERVICE, 1);
+            if (usersURI.length > 0) {
+                Log.info("Found Users service at: " + usersURI[0]);
+                // Initialize the UsersClient with the discovered URI
+                userServer = new RestUsersClient(usersURI[0]);
+            } else {
+                throw new IllegalStateException("No Users service found via Discovery!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize JavaImage due to Discovery issues.", e);
+        }
 
         // Ensure storage directory exists
         File dir = new File(IMAGE_STORAGE_DIR);
@@ -39,6 +62,7 @@ public class JavaImage implements Image {
             return Result.error(ErrorCode.BAD_REQUEST);
         }
 
+        // Validate user credentials using UsersClient
         Result<User> userResult = userServer.getUser(userId, password);
         if (!userResult.isOK()) {
             return Result.error(userResult.error());
@@ -90,6 +114,7 @@ public class JavaImage implements Image {
             return Result.error(ErrorCode.BAD_REQUEST);
         }
 
+        // Validate user credentials using UsersClient
         Result<User> userResult = userServer.getUser(userId, password);
         if (!userResult.isOK()) {
             return Result.error(userResult.error());

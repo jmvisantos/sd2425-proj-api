@@ -11,35 +11,36 @@ import fctreddit.impl.Discovery;
 
 public class ImageServer {
 
-	private static Logger Log = Logger.getLogger(ImageServer.class.getName());
+    private static final Logger Log = Logger.getLogger(ImageServer.class.getName());
 
-	static {
-		System.setProperty("java.net.preferIPv4Stack", "true");
-		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s\n");
-	}
-	
-	public static final int PORT = 8081;
-	public static final String SERVICE = "Image";
-	private static final String SERVER_URI_FMT = "http://%s:%s/rest";
-	
-	public static void main(String[] args) {
-		try {
-			
-		ResourceConfig config = new ResourceConfig();
-		config.register(UsersResource.class);
+    public static final int PORT = 8081;
+    public static final String SERVICE = "Images";
+    private static final String SERVER_URI_FMT = "http://%s:%s/rest";
 
-		String ip = InetAddress.getLocalHost().getHostAddress();
-		String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
-		JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
-	
-		Discovery discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
-		discovery.start();
+    public static void main(String[] args) {
+        try {
+            // Register your JAX-RS resources
+            ResourceConfig config = new ResourceConfig();
+            config.register(ImageResource.class); // your image REST class
 
-		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
-		
-		//More code can be executed here...
-		} catch( Exception e) {
-			Log.severe(e.getMessage());
-		}
-	}	
+            // Launch HTTP server
+            String ip = InetAddress.getLocalHost().getHostAddress();
+            String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
+            JdkHttpServerFactory.createHttpServer(URI.create(serverURI), config);
+
+            // Use the static Discovery instance from UsersServer
+            if (UsersServer.discovery == null) {
+                throw new IllegalStateException("UsersServer.discovery is not initialized!");
+            }
+
+            // Announce the Image service using the shared Discovery instance
+            UsersServer.discovery.start();
+
+            Log.info(String.format("%s Server ready @ %s\n", SERVICE, serverURI));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.severe(e.getMessage());
+        }
+    }
 }
