@@ -9,10 +9,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 /**
@@ -38,13 +38,6 @@ public class Discovery {
 	private static Discovery instance;
 	private static Logger Log = Logger.getLogger(Discovery.class.getName());
 
-	static {
-		// addresses some multicast issues on some TCP/IP stacks
-		System.setProperty("java.net.preferIPv4Stack", "true");
-		// summarizes the logging format
-		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s");
-	}
-
 	// The pre-aggreed multicast endpoint assigned to perform discovery.
 	// Allowed IP Multicast range: 224.0.0.1 - 239.255.255.255
 	static final public InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("226.226.226.226", 2266);
@@ -64,9 +57,7 @@ public class Discovery {
 	/**
 	 * @param serviceName the name of the service to announce
 	 * @param serviceURI  an uri string - representing the contact endpoint of the
-	 * 
-	 * Singleton pattern
-	 *           service being announced
+	 * 										* service
 	 * @throws IOException
 	 * @throws UnknownHostException
 	 * @throws SocketException
@@ -83,26 +74,40 @@ public class Discovery {
 
 		this.ms = new MulticastSocket(addr.getPort());
 		this.ms.joinGroup(addr, NetworkInterface.getByInetAddress(InetAddress.getLocalHost()));
+
 	}
 
 	public Discovery(InetSocketAddress addr) throws SocketException, UnknownHostException, IOException {
 		this(addr, null, null);
 	}
 
-	 // Public method to provide access to the instance
-    public static synchronized Discovery getInstance(InetSocketAddress address, String service, String serverURI) {
-        if (instance == null) {
-			try {
-            	instance = new Discovery(address, service, serverURI);
-			}
-			catch (Exception e) {
-				Log.severe(e.getMessage());
+	// Public method to provide access to the instance
+	public static synchronized Discovery getInstance(InetSocketAddress addr, String serviceName, String serverURI) {
+	    if (instance == null) {
+	        try {
+	            instance = new Discovery(DISCOVERY_ADDR, serviceName, serverURI);
+	            instance.start(); // Automatically start the discovery process
+	        } catch (Exception e) {
+	            Log.severe("Failed to initialize Discovery instance: " + e.getMessage());
+	            throw new RuntimeException(e);
+	        }
+	    }
+	    return instance;
+	}
 
-			}
-        }
-        return instance;
-    }
-
+	// Public method to provide access to the instance
+	public static synchronized Discovery getInstance() {
+	    if (instance == null) {
+	        try {
+	            instance = new Discovery(DISCOVERY_ADDR);
+	            instance.start(); // Automatically start the discovery process
+	        } catch (Exception e) {
+	            Log.severe("Failed to initialize Discovery instance: " + e.getMessage());
+	            throw new RuntimeException(e);
+	        }
+	    }
+	    return instance;
+	}
 	/**
 	 * Starts sending service announcements at regular intervals...
 	 * 
@@ -150,12 +155,22 @@ public class Discovery {
 					if (msgElems.length == 2) { // periodic announcement
 						System.out.printf("FROM %s (%s) : %s\n", pkt.getAddress().getHostName(),
 								pkt.getAddress().getHostAddress(), msg);
+								
 						// to complete by recording the received information
+						
+						String Name = msgElems[0];
+						URI uri = URI.create(msgElems[1]);
+						
+						Queue<URI> URIList = new LinkedList<>();		
+						URIList.add(uri);				// Add the URI to the serviceURIs map
+						serviceURIs.put(Name, URIList);
 
-						String receivedServiceName = msgElems[0];
-						URI receivedServiceURI = URI.create(msgElems[1]);
-						serviceURIs.computeIfAbsent(receivedServiceName, k -> new ConcurrentLinkedQueue<>())
-								.add(receivedServiceURI);
+						
+						synchronized (URIList) {
+							URIList.add(uri);
+						}
+
+						
 					}
 				} catch (IOException e) {
 					// do nothing
@@ -190,7 +205,7 @@ public class Discovery {
 			}
 		}
 
-		return uris.stream().limit(minReplies).toArray(URI[]::new);
+		return uris.toArray(URI[]::new);
 	}
 
 	

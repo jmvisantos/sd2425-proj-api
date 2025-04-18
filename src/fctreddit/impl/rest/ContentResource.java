@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import fctreddit.api.Post;
 import fctreddit.api.java.Content;
-import fctreddit.api.java.Users;
 import fctreddit.api.rest.RestContent;
 import fctreddit.impl.server.java.JavaContent;
 
@@ -14,8 +13,8 @@ public class ContentResource implements RestContent{
 
   final Content impl;
 
-  public ContentResource(Users userServer) {
-    impl = new JavaContent(userServer);
+  public ContentResource() {
+    impl = new JavaContent();
   }
 
   @Override

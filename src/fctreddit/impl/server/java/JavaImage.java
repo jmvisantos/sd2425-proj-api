@@ -6,6 +6,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -21,30 +22,22 @@ import fctreddit.impl.rest.UsersServer;
 public class JavaImage implements Image {
 
     private static final Logger Log = Logger.getLogger(JavaImage.class.getName());
-    private static final String IMAGE_STORAGE_DIR = "images";
+    private static final String IMAGE_STORAGE_DIR = "Images";
     private UsersClient usersClient;
+    private final Discovery discovery;
 
     public JavaImage() {
+        discovery = Discovery.getInstance();
+
         try {
-            //  Acess the singleton instace of UsersClient
-            Discovery discovery = UsersServer.discovery;
-
-            if (discovery == null) {
-                throw new IllegalStateException("Discovery instance is not initialized in UsersServer!");
-            }
-
             // Discover the Users service
-            URI[] usersURI = discovery.knownUrisOf(UsersServer.SERVICE, 1);
-            if (usersURI.length > 0) {
-                Log.info("Found Users service at: " + usersURI[0]);
-                // Initialize the UsersClient with the discovered URI
-                usersClient = new RestUsersClient(usersURI[0]);
-            } else {
-                throw new IllegalStateException("No Users service found via Discovery!");
-            }
+            URI usersURI = discovery.knownUrisOf(UsersServer.SERVICE, 1)[0];
+            Log.info("Discovered Users service URI: " + usersURI);
+
+            usersClient = new RestUsersClient(usersURI);
+
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to initialize JavaImage due to Discovery issues.", e);
         }
 
         // Ensure storage directory exists
@@ -58,7 +51,7 @@ public class JavaImage implements Image {
     public Result<String> createImage(String userId, byte[] imageContents, String password) {
         Log.info("createImage: user=" + userId);
 
-        if (userId == null || password == null || imageContents == null || imageContents.length == 0) {
+        if (imageContents == null || imageContents.length == 0) {
             return Result.error(ErrorCode.BAD_REQUEST);
         }
 
@@ -76,7 +69,10 @@ public class JavaImage implements Image {
             Path imagePath = userDir.resolve(imageId + ".img");
             Files.write(imagePath, imageContents);
 
-            return Result.ok(imageId);
+            // Convert the image path to an absolute URI
+            URI imageUri = imagePath.toAbsolutePath().toUri();
+
+            return Result.ok(imageUri.toString());
         } catch (IOException e) {
             e.printStackTrace();
             return Result.error(ErrorCode.INTERNAL_ERROR);
@@ -87,9 +83,16 @@ public class JavaImage implements Image {
     public Result<byte[]> getImage(String userId, String imageId) {
         Log.info("getImage: user=" + userId + ", imageId=" + imageId);
 
-        if (userId == null || imageId == null) {
-            return Result.error(ErrorCode.BAD_REQUEST);
-        }
+         // Validate user credentials using UsersClient
+         Result<List<User>> userResultList = usersClient.searchUsers(userId);
+         if (!userResultList.isOK() || userResultList.value().isEmpty()) {
+             return Result.error(userResultList.error());
+         }
+         User user = userResultList.value().get(0); // Assuming the first user is the intended one
+         Result<User> userResult = Result.ok(user);
+         if (!userResult.isOK()) {
+             return Result.error(userResult.error());
+         }
 
         Path imagePath = Paths.get(IMAGE_STORAGE_DIR, userId, imageId + ".img");
 
@@ -115,7 +118,7 @@ public class JavaImage implements Image {
         }
 
         // Validate user credentials using UsersClient
-        Result<User> userResult = userServer.getUser(userId, password);
+        Result<User> userResult = usersClient.getUser(userId, password);
         if (!userResult.isOK()) {
             return Result.error(userResult.error());
         }

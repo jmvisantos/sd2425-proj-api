@@ -7,8 +7,6 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import fctreddit.impl.Discovery;
-
 public class ContentServer {
 
 	private static Logger Log = Logger.getLogger(UsersServer.class.getName());
@@ -32,8 +30,6 @@ public class ContentServer {
 		String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
-		Discovery discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
-		discovery.start();
 	
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
 		
