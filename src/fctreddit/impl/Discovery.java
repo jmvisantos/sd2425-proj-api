@@ -35,6 +35,7 @@ import java.util.logging.Logger;
  * </p>
  */
 public class Discovery {
+	private static Discovery instance;
 	private static Logger Log = Logger.getLogger(Discovery.class.getName());
 
 	static {
@@ -63,12 +64,14 @@ public class Discovery {
 	/**
 	 * @param serviceName the name of the service to announce
 	 * @param serviceURI  an uri string - representing the contact endpoint of the
-	 *                    service being announced
+	 * 
+	 * Singleton pattern
+	 *           service being announced
 	 * @throws IOException
 	 * @throws UnknownHostException
 	 * @throws SocketException
 	 */
-	public Discovery(InetSocketAddress addr, String serviceName, String serviceURI)
+	private Discovery(InetSocketAddress addr, String serviceName, String serviceURI)
 			throws SocketException, UnknownHostException, IOException {
 		this.addr = addr;
 		this.serviceName = serviceName;
@@ -85,6 +88,20 @@ public class Discovery {
 	public Discovery(InetSocketAddress addr) throws SocketException, UnknownHostException, IOException {
 		this(addr, null, null);
 	}
+
+	 // Public method to provide access to the instance
+    public static synchronized Discovery getInstance(InetSocketAddress address, String service, String serverURI) {
+        if (instance == null) {
+			try {
+            	instance = new Discovery(address, service, serverURI);
+			}
+			catch (Exception e) {
+				Log.severe(e.getMessage());
+
+			}
+        }
+        return instance;
+    }
 
 	/**
 	 * Starts sending service announcements at regular intervals...
@@ -175,6 +192,8 @@ public class Discovery {
 
 		return uris.stream().limit(minReplies).toArray(URI[]::new);
 	}
+
+	
 
 	// Main just for testing purposes
 	public static void main(String[] args) throws Exception {

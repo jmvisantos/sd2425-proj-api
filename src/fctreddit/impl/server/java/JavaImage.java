@@ -22,11 +22,11 @@ public class JavaImage implements Image {
 
     private static final Logger Log = Logger.getLogger(JavaImage.class.getName());
     private static final String IMAGE_STORAGE_DIR = "images";
-    private UsersClient userServer;
+    private UsersClient usersClient;
 
     public JavaImage() {
         try {
-            // Access the static Discovery instance from UsersServer
+            //  Acess the singleton instace of UsersClient
             Discovery discovery = UsersServer.discovery;
 
             if (discovery == null) {
@@ -38,7 +38,7 @@ public class JavaImage implements Image {
             if (usersURI.length > 0) {
                 Log.info("Found Users service at: " + usersURI[0]);
                 // Initialize the UsersClient with the discovered URI
-                userServer = new RestUsersClient(usersURI[0]);
+                usersClient = new RestUsersClient(usersURI[0]);
             } else {
                 throw new IllegalStateException("No Users service found via Discovery!");
             }
@@ -63,7 +63,7 @@ public class JavaImage implements Image {
         }
 
         // Validate user credentials using UsersClient
-        Result<User> userResult = userServer.getUser(userId, password);
+        Result<User> userResult = usersClient.getUser(userId, password);
         if (!userResult.isOK()) {
             return Result.error(userResult.error());
         }

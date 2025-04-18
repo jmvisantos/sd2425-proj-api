@@ -43,7 +43,7 @@ public class JavaContent implements Content {
 				return Result.error(userResult.error());
 			}
 
-			String postId = UUID.randomUUID().toString();
+			String postId = UUID.randomUUID().toString(); 	
 			
 			try {
 				File userDir = new File(CONTENT_STORAGE_DIR, post.getAuthorId());

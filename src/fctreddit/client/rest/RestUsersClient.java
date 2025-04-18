@@ -31,6 +31,7 @@ public class RestUsersClient extends UsersClient {
 
 	final WebTarget target;
 
+
 	public RestUsersClient(URI serverURI) {
 		this.serverURI = serverURI;
 

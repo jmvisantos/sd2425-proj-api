@@ -34,14 +34,17 @@ public class UsersServer {
 		serverURI = String.format(SERVER_URI_FMT, ip, PORT);
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
-		discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
+		discovery = Discovery.getInstance(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
 		discovery.start();
 	
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
 		
 		//More code can be executed here...
-		} catch( Exception e) {
+		} 
+		catch( Exception e) {
 			Log.severe(e.getMessage());
 		}
-	}	
+	}
+
+	
 }
