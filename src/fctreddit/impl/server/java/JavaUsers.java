@@ -24,8 +24,8 @@ public class JavaUsers implements Users {
 		Log.info("createUser : " + user);
 
 		// Check if user data is valid
-		if (user.getUserId() == null || user.getPassword() == null || user.getFullName() == null
-				|| user.getEmail() == null || user.getPassword().isEmpty()) {
+		if (user.getEmail() == null || user.getUserId() == null || user.getPassword() == null || user.getFullName() == null
+			 || user.getPassword().isEmpty() || user.getEmail().isEmpty() || user.getUserId().isEmpty() || user.getFullName().isEmpty()) {
 			Log.info("User object invalid.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
@@ -131,19 +131,19 @@ public class JavaUsers implements Users {
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
 
-		if (user.getFullName() != null) {
+		if (user.getFullName() != null && !user.getFullName().isEmpty()) {
 			existingUser.setFullName(user.getFullName());
 		}
 
-		if (user.getEmail() != null) {
+		if (user.getEmail() != null && !user.getEmail().isEmpty()) {
 			existingUser.setEmail(user.getEmail());
 		}
 
-		if (user.getPassword() != null) {
+		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
 			existingUser.setPassword(user.getPassword());
 		}
 
-		if (user.getAvatarUrl() != null) {
+		if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
 			existingUser.setAvatarUrl(user.getAvatarUrl());
 		}
 

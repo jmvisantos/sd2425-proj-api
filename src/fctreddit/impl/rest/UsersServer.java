@@ -33,9 +33,8 @@ public class UsersServer {
 		serverURI = String.format(SERVER_URI_FMT, ip, PORT);
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
-		// Initialize the Discovery singleton
-        var discovery = Discovery.getInstance(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
-        discovery.start();
+		Discovery discovery = Discovery.getInstance(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
+		discovery.start();
 		
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
 		

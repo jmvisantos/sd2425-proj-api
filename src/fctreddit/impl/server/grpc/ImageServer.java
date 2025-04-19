@@ -9,11 +9,11 @@ import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.ServerCredentials;
 
-public class UsersServer {
-public static final int PORT = 9000;
+public class ImageServer {
+public static final int PORT = 9001;
 
 	private static final String GRPC_CTX = "/grpc";
-	private static final String SERVICE = "Users";
+	private static final String SERVICE = "Image";
 	private static final String SERVER_BASE_URI = "grpc://%s:%s%s";
 	
 	private static Logger Log = Logger.getLogger(UsersServer.class.getName());
@@ -28,7 +28,7 @@ public static final int PORT = 9000;
 		Discovery discovery = Discovery.getInstance(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
 		discovery.start();
 
-		Log.info(String.format("Users gRPC Server ready @ %s\n", serverURI));
+		Log.info(String.format("Image gRPC Server ready @ %s\n", serverURI));
 		server.start().awaitTermination();
 	}
 }
