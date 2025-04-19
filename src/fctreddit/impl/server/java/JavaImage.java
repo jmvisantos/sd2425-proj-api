@@ -7,7 +7,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -24,7 +23,7 @@ public class JavaImage implements Image {
 
     private static final Logger Log = Logger.getLogger(JavaImage.class.getName());
 
-    private static final String IMAGE_STORAGE_DIR = "Images";
+    private static final String IMAGE_STORAGE_DIR = "image";
     private UsersClient usersClient;
     private final Discovery discovery;
     private static final String SERVER_URI_FMT = "http://%s:%s/rest";
@@ -63,21 +62,17 @@ public class JavaImage implements Image {
         // Validate user credentials using UsersClient
         Result<User> userResult = usersClient.getUser(userId, password);
         if (!userResult.isOK()) {
-            System.out.println("User not found in createImage: " + userId);
             return Result.error(userResult.error());
         }
 
         try {
             String imageId = UUID.randomUUID().toString();
-            Path userDir = Paths.get(IMAGE_STORAGE_DIR, userId);
-            Path path = Files.createDirectories(userDir);
+            Path userDir = Paths.get(userId);
+            Files.createDirectories(userDir);
 
-            Log.info("Image path: " + path.toString());
             Path imagePath = userDir.resolve(imageId + ".img");
 
-            Path imgPath = Files.write(imagePath, imageContents);
-
-            Log.info("Image written to: " + imgPath.toString());
+            Files.write(imagePath, imageContents);
             
             // Check if the file was created successfully
             if (!Files.exists(imagePath)) {
@@ -90,9 +85,10 @@ public class JavaImage implements Image {
             serverURI = String.format(SERVER_URI_FMT, ip, PORT);
 
             // Construct the URI for the image
-            String baseUrl = serverURI + "/images";
+            String baseUrl = serverURI + "/image";
 
             String relativePath = userId + "/" + imageId + ".img";
+
             URI imageUri = URI.create(baseUrl + "/" + relativePath);
 
             return Result.ok(imageUri.toString());
@@ -111,20 +107,7 @@ public class JavaImage implements Image {
                 return Result.error(ErrorCode.BAD_REQUEST);
             }
 
-            // Validate user credentials using UsersClient
-            Result<List<User>> userResultList = usersClient.searchUsers(userId);
-            if (!userResultList.isOK() || userResultList.value().isEmpty()) {
-                return Result.error(userResultList.error());
-            }
-
-            User user = userResultList.value().get(0);
-            
-            Result<User> userResult = Result.ok(user);
-            if (!userResult.isOK()) {
-                return Result.error(userResult.error());
-            }
-
-            Path imagePath = Paths.get(IMAGE_STORAGE_DIR, userId, imageId + ".img");
+            Path imagePath = Paths.get(userId, imageId);
 
             if (!Files.exists(imagePath)) {
                 return Result.error(ErrorCode.NOT_FOUND);
@@ -155,7 +138,7 @@ public class JavaImage implements Image {
             return Result.error(userResult.error());
         }
 
-        Path imagePath = Paths.get(IMAGE_STORAGE_DIR, userId, imageId + ".img");
+        Path imagePath = Paths.get(IMAGE_STORAGE_DIR, userId, imageId);
 
         if (!Files.exists(imagePath)) {
             return Result.error(ErrorCode.NOT_FOUND);

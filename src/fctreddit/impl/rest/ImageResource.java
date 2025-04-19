@@ -20,7 +20,7 @@ public class ImageResource implements RestImage{
 
   @Override
   public String createImage(String userId, byte[] imageContents, String password) {
-    Log.info("createImage : user" + userId + "; pwd = " + password);
+    Log.info("createImage : user = " + userId + "; pwd = " + password);
     Result<String> res = impl.createImage(userId, imageContents, password);
 
     if(!res.isOK()) {
@@ -37,7 +37,6 @@ public class ImageResource implements RestImage{
     Result<byte[]> res = impl.getImage(userId, imageId);
 
     if(!res.isOK()) {
-      System.out.println("getImage : user = " + userId + "; imageId = " + imageId + "; error = " + res.error());
       throw new WebApplicationException(errorCodeToStatus(res.error()));
     }
     return res.value();
