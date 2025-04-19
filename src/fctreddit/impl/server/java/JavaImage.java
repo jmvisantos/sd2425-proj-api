@@ -2,6 +2,7 @@ package fctreddit.impl.server.java;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,9 +23,14 @@ import fctreddit.impl.rest.UsersServer;
 public class JavaImage implements Image {
 
     private static final Logger Log = Logger.getLogger(JavaImage.class.getName());
+
     private static final String IMAGE_STORAGE_DIR = "Images";
     private UsersClient usersClient;
     private final Discovery discovery;
+    private static final String SERVER_URI_FMT = "http://%s:%s/rest";
+    public static final int PORT = 8081;
+    public static String serverURI;
+
 
     public JavaImage() {
         discovery = Discovery.getInstance();
@@ -32,11 +38,6 @@ public class JavaImage implements Image {
         try {
             // Discover the Users service
             URI usersURI = discovery.knownUrisOf(UsersServer.SERVICE, 1)[0];
-            Log.info("Discovered Users service URI: " + usersURI);
-
-            if (!usersURI.isAbsolute()) {
-                throw new IllegalArgumentException("Discovered URI is not absolute: " + usersURI);
-            }
 
             usersClient = new RestUsersClient(usersURI);
 
@@ -62,25 +63,35 @@ public class JavaImage implements Image {
         // Validate user credentials using UsersClient
         Result<User> userResult = usersClient.getUser(userId, password);
         if (!userResult.isOK()) {
+            System.out.println("User not found in createImage: " + userId);
             return Result.error(userResult.error());
         }
 
         try {
             String imageId = UUID.randomUUID().toString();
             Path userDir = Paths.get(IMAGE_STORAGE_DIR, userId);
-            Files.createDirectories(userDir);
+            Path path = Files.createDirectories(userDir);
 
+            Log.info("Image path: " + path.toString());
             Path imagePath = userDir.resolve(imageId + ".img");
 
-            Files.write(imagePath, imageContents);
+            Path imgPath = Files.write(imagePath, imageContents);
 
+            Log.info("Image written to: " + imgPath.toString());
+            
             // Check if the file was created successfully
             if (!Files.exists(imagePath)) {
                 return Result.error(ErrorCode.INTERNAL_ERROR);
             }
 
             // Convert the image path to an absolute URI
-            String baseUrl = "http://localhost/images"; // Base URL for serving images
+            String ip = InetAddress.getLocalHost().getHostAddress();
+
+            serverURI = String.format(SERVER_URI_FMT, ip, PORT);
+
+            // Construct the URI for the image
+            String baseUrl = serverURI + "/images";
+
             String relativePath = userId + "/" + imageId + ".img";
             URI imageUri = URI.create(baseUrl + "/" + relativePath);
 
@@ -105,18 +116,22 @@ public class JavaImage implements Image {
             if (!userResultList.isOK() || userResultList.value().isEmpty()) {
                 return Result.error(userResultList.error());
             }
-            User user = userResultList.value().get(0); // Assuming the first user is the desired one
+
+            User user = userResultList.value().get(0);
+            
             Result<User> userResult = Result.ok(user);
             if (!userResult.isOK()) {
                 return Result.error(userResult.error());
             }
 
             Path imagePath = Paths.get(IMAGE_STORAGE_DIR, userId, imageId + ".img");
+
             if (!Files.exists(imagePath)) {
                 return Result.error(ErrorCode.NOT_FOUND);
             }
 
             byte[] data = Files.readAllBytes(imagePath);
+
             return Result.ok(data);
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,6 +150,7 @@ public class JavaImage implements Image {
 
         // Validate user credentials using UsersClient
         Result<User> userResult = usersClient.getUser(userId, password);
+        
         if (!userResult.isOK()) {
             return Result.error(userResult.error());
         }

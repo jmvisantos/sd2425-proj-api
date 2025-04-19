@@ -21,6 +21,25 @@ import jakarta.ws.rs.core.Response.Status;
 
 public class RestImageClient extends ImageClient {
 
+  private static Logger Log = Logger.getLogger(RestImageClient.class.getName());
+
+	final Client client;
+	final ClientConfig config;
+
+	final WebTarget target;
+
+  public RestImageClient(URI serverURI) {
+
+    this.config = new ClientConfig();
+
+    config.property(ClientProperties.READ_TIMEOUT, READ_TIMEOUT);
+    config.property(ClientProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
+
+    this.client = ClientBuilder.newClient(config);
+
+    target = client.target(serverURI).path(RestImage.PATH);
+  }
+
   @Override
   public Result<String> createImage(String userId, byte[] imageContents, String metadata) {
     Log.info("createImage: user=" + userId);
@@ -85,24 +104,6 @@ public class RestImageClient extends ImageClient {
       }
     }
     return Result.error(ErrorCode.INTERNAL_ERROR);
-  }
-  private static Logger Log = Logger.getLogger(RestUsersClient.class.getName());
-
-	final Client client;
-	final ClientConfig config;
-
-	final WebTarget target;
-
-  public RestImageClient(URI serverURI) {
-
-    this.config = new ClientConfig();
-
-    config.property(ClientProperties.READ_TIMEOUT, READ_TIMEOUT);
-    config.property(ClientProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
-
-    this.client = ClientBuilder.newClient(config);
-
-    target = client.target(serverURI).path(RestImage.PATH);
   }
 
   @Override

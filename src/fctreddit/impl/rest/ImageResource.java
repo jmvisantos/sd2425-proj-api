@@ -37,6 +37,7 @@ public class ImageResource implements RestImage{
     Result<byte[]> res = impl.getImage(userId, imageId);
 
     if(!res.isOK()) {
+      System.out.println("getImage : user = " + userId + "; imageId = " + imageId + "; error = " + res.error());
       throw new WebApplicationException(errorCodeToStatus(res.error()));
     }
     return res.value();

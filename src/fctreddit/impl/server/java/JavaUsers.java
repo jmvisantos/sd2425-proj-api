@@ -31,7 +31,8 @@ public class JavaUsers implements Users {
 		}
 
 		// Check if user already exists
-		User existingUser = null;
+		User existingUser;
+
 		try {
 			existingUser = hibernate.get(User.class, user.getUserId());
 		} catch (Exception e) {
@@ -69,7 +70,7 @@ public class JavaUsers implements Users {
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
 
-		User user = null;
+		User user;
 
 		try {
 			user = hibernate.get(User.class, userId);
@@ -109,7 +110,7 @@ public class JavaUsers implements Users {
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
 
-		User existingUser = null;
+		User existingUser;
 
 		try {
 			existingUser = hibernate.get(User.class, userId);
@@ -167,7 +168,7 @@ public class JavaUsers implements Users {
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
 
-		User user = null;
+		User user;
 		try {
 			user = hibernate.get(User.class, userId);
 		} catch (Exception e) {
@@ -201,8 +202,7 @@ public class JavaUsers implements Users {
 	public Result<List<User>> searchUsers(String keyword) {
 		Log.info("searchUsers : keyword = " + keyword);
 
-		
-		List<User> users = null;
+		List<User> users;
 
 		try {
 			String jpql = "SELECT u FROM User u WHERE u.userId LIKE '%" + keyword + "%'";

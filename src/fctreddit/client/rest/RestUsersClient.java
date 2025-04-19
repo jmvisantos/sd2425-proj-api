@@ -165,9 +165,8 @@ public class RestUsersClient extends UsersClient {
 
 	@Override
 	public Result<List<User>> searchUsers(String pattern) {
-		for (int i = 0; i < MAX_RETRIES; i++) {
+		for (int i = 0; i < 1; i++) {
 			try {
-				Log.info("ENTROU NO RESTUSERCLIENT");
 				Response r = target.path("/")
 						.queryParam(RestUsers.QUERY, pattern).request()
 						.accept(MediaType.APPLICATION_JSON)
@@ -175,7 +174,6 @@ public class RestUsersClient extends UsersClient {
 
 				int status = r.getStatus();
 				if (status != Status.OK.getStatusCode()) {
-					Log.info("ERRO DE CONEÇÃO");
 					return Result.error(getErrorCodeFrom(status));
 				} else
 					return Result.ok(r.readEntity(new GenericType<List<User>>() {

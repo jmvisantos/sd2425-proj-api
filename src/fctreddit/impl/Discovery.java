@@ -161,16 +161,8 @@ public class Discovery {
 						String Name = msgElems[0];
 						URI uri = URI.create(msgElems[1]);
 						
-						Queue<URI> URIList = new LinkedList<>();		
-						URIList.add(uri);				// Add the URI to the serviceURIs map
-						serviceURIs.put(Name, URIList);
+						serviceURIs.computeIfAbsent(Name, k -> new LinkedList<>()).add(uri);
 
-						
-						synchronized (URIList) {
-							URIList.add(uri);
-						}
-
-						
 					}
 				} catch (IOException e) {
 					// do nothing

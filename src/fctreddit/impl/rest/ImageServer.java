@@ -33,6 +33,7 @@ public class ImageServer {
             // Launch HTTP server
             String ip = InetAddress.getLocalHost().getHostAddress();
             serverURI = String.format(SERVER_URI_FMT, ip, PORT);
+
             JdkHttpServerFactory.createHttpServer(URI.create(serverURI), config);
             
             var discovery = Discovery.getInstance();
