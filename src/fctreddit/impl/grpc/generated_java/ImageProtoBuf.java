@@ -1324,16 +1324,16 @@ public final class ImageProtoBuf {
        * @param value The imageId to set.
        * @return This builder for chaining.
        */
-      public Builder setImageId(
-          java.lang.String value) {
+      public Builder setImageId(String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+            throw new NullPointerException();
+        }
+
         imageId_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>string imageId = 1;</code>
        * @return This builder for chaining.

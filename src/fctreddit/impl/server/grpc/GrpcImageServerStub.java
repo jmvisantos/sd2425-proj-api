@@ -40,13 +40,10 @@ public class GrpcImageServerStub implements UsersGrpc.AsyncService, BindableServ
   public void getImage(GetImageArgs request, StreamObserver<GetImageResult> responseObserver) {
     Result<byte[]> res = impl.getImage(request.getUserId(), request.getImageId());
     if (!res.isOK()) {
-      responseObserver.onError(errorCodeToStatus(res.error()));
-    } else {
-      GetImageResult result = GetImageResult.newBuilder().setImageContent(ByteString.copyFrom(res.value())).build();
-      responseObserver.onNext(result);
-      responseObserver.onCompleted();
+        responseObserver.onError(errorCodeToStatus(res.error()));
     }
-  }
+
+}
 
   public void deleteImage(DeleteImageArgs request, StreamObserver<DeleteImageResult> responseObserver) {
     Result<Void> res = impl.deleteImage(request.getUserId(), request.getImageId(), request.getPassword());
