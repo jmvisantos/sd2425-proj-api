@@ -1,6 +1,7 @@
 package fctreddit.impl.server.grpc;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import fctreddit.api.User;
 import fctreddit.api.java.Result;
@@ -25,6 +26,7 @@ import io.grpc.stub.StreamObserver;
 public class GrpcUsersServerStub implements UsersGrpc.AsyncService, BindableService {
 
 	Users impl = new JavaUsers();
+	private static Logger Log = Logger.getLogger(UsersServer.class.getName());
 
 	@Override
 	public final ServerServiceDefinition bindService() {
@@ -33,14 +35,25 @@ public class GrpcUsersServerStub implements UsersGrpc.AsyncService, BindableServ
 
 	@Override
 	public void createUser(CreateUserArgs request, StreamObserver<CreateUserResult> responseObserver) {
-		User user = DataModelAdaptor.GrpcUser_to_User(request.getUser());
-		Result<String> res = impl.createUser(user);
-		if (!res.isOK())
-			responseObserver.onError(errorCodeToStatus(res.error()));
-		else {
-			CreateUserResult result = CreateUserResult.newBuilder().setUserId(res.value()).build();
-			responseObserver.onNext(result);
-			responseObserver.onCompleted();
+		try {
+			User user = DataModelAdaptor.GrpcUser_to_User(request.getUser());
+			Result<String> res = impl.createUser(user);
+			if (!res.isOK())
+				responseObserver.onError(errorCodeToStatus(res.error()));
+			else {
+				CreateUserResult result = CreateUserResult.newBuilder().setUserId(res.value()).build();
+				responseObserver.onNext(result);
+				responseObserver.onCompleted();
+			}
+		} catch (Exception e) {
+			// Log the exception
+			Log.severe("Error creating user: " + e.getMessage());
+			e.printStackTrace();
+			
+			// Return a more specific error if possible
+			responseObserver.onError(io.grpc.Status.INTERNAL
+				.withDescription("Internal server error: " + e.getMessage())
+				.asException());
 		}
 	}
 
