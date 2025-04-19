@@ -1,7 +1,5 @@
 package fctreddit.impl.server.grpc;
 
-import com.google.protobuf.ByteString;
-
 import fctreddit.api.java.Image;
 import fctreddit.api.java.Result;
 import fctreddit.impl.grpc.generated_java.ImageProtoBuf.CreateImageArgs;
@@ -42,8 +40,8 @@ public class GrpcImageServerStub implements UsersGrpc.AsyncService, BindableServ
     if (!res.isOK()) {
       responseObserver.onError(errorCodeToStatus(res.error()));
     } else {
-      GetImageResult result = GetImageResult.newBuilder().setImageContent(ByteString.copyFrom(res.value())).build();
-      responseObserver.onNext(result);
+      //GetImageResult result = GetImageResult.newBuilder().setImageContent(ByteString.copyFrom(res.value())).build();
+      //responseObserver.onNext(result);
       responseObserver.onCompleted();
     }
   }
