@@ -34,6 +34,10 @@ public class JavaImage implements Image {
             URI usersURI = discovery.knownUrisOf(UsersServer.SERVICE, 1)[0];
             Log.info("Discovered Users service URI: " + usersURI);
 
+            if (!usersURI.isAbsolute()) {
+                throw new IllegalArgumentException("Discovered URI is not absolute: " + usersURI);
+            }
+
             usersClient = new RestUsersClient(usersURI);
 
         } catch (Exception e) {
@@ -67,10 +71,18 @@ public class JavaImage implements Image {
             Files.createDirectories(userDir);
 
             Path imagePath = userDir.resolve(imageId + ".img");
+
             Files.write(imagePath, imageContents);
 
+            // Check if the file was created successfully
+            if (!Files.exists(imagePath)) {
+                return Result.error(ErrorCode.INTERNAL_ERROR);
+            }
+
             // Convert the image path to an absolute URI
-            URI imageUri = imagePath.toAbsolutePath().toUri();
+            String baseUrl = "http://localhost/images"; // Base URL for serving images
+            String relativePath = userId + "/" + imageId + ".img";
+            URI imageUri = URI.create(baseUrl + "/" + relativePath);
 
             return Result.ok(imageUri.toString());
         } catch (IOException e) {
@@ -83,37 +95,41 @@ public class JavaImage implements Image {
     public Result<byte[]> getImage(String userId, String imageId) {
         Log.info("getImage: user=" + userId + ", imageId=" + imageId);
 
-         // Validate user credentials using UsersClient
-         Result<List<User>> userResultList = usersClient.searchUsers(userId);
-         if (!userResultList.isOK() || userResultList.value().isEmpty()) {
-             return Result.error(userResultList.error());
-         }
-         User user = userResultList.value().get(0); // Assuming the first user is the intended one
-         Result<User> userResult = Result.ok(user);
-         if (!userResult.isOK()) {
-             return Result.error(userResult.error());
-         }
-
-        Path imagePath = Paths.get(IMAGE_STORAGE_DIR, userId, imageId + ".img");
-
-        if (!Files.exists(imagePath)) {
-            return Result.error(ErrorCode.NOT_FOUND);
-        }
-
         try {
+            if (imageId == null) {
+                return Result.error(ErrorCode.BAD_REQUEST);
+            }
+
+            // Validate user credentials using UsersClient
+            Result<List<User>> userResultList = usersClient.searchUsers(userId);
+            if (!userResultList.isOK() || userResultList.value().isEmpty()) {
+                return Result.error(userResultList.error());
+            }
+            User user = userResultList.value().get(0); // Assuming the first user is the desired one
+            Result<User> userResult = Result.ok(user);
+            if (!userResult.isOK()) {
+                return Result.error(userResult.error());
+            }
+
+            Path imagePath = Paths.get(IMAGE_STORAGE_DIR, userId, imageId + ".img");
+            if (!Files.exists(imagePath)) {
+                return Result.error(ErrorCode.NOT_FOUND);
+            }
+
             byte[] data = Files.readAllBytes(imagePath);
             return Result.ok(data);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.error(ErrorCode.INTERNAL_ERROR);
         }
+
     }
 
     @Override
     public Result<Void> deleteImage(String userId, String imageId, String password) {
         Log.info("deleteImage: user=" + userId + ", imageId=" + imageId);
 
-        if (userId == null || imageId == null || password == null) {
+        if (imageId == null) {
             return Result.error(ErrorCode.BAD_REQUEST);
         }
 

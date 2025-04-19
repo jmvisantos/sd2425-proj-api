@@ -2,6 +2,7 @@ package fctreddit.impl.server.java;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -12,7 +13,10 @@ import fctreddit.api.java.Content;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
 import fctreddit.client.java.UsersClient;
+import fctreddit.client.rest.RestUsersClient;
 import fctreddit.impl.Discovery;
+import fctreddit.impl.rest.UsersServer;
+
 
 public class JavaContent implements Content {
 
@@ -24,7 +28,20 @@ public class JavaContent implements Content {
     public JavaContent() {
 		discovery = Discovery.getInstance();
 
-		
+		 try {
+            // Discover the Users service
+            URI usersURI = discovery.knownUrisOf(UsersServer.SERVICE, 1)[0];
+            Log.info("Discovered Users service URI: " + usersURI);
+
+            if (!usersURI.isAbsolute()) {
+                throw new IllegalArgumentException("Discovered URI is not absolute: " + usersURI);
+            }
+
+            usersClient = new RestUsersClient(usersURI);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void startUsersClient() {

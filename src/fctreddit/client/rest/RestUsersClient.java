@@ -25,7 +25,6 @@ import jakarta.ws.rs.core.Response.Status;
 public class RestUsersClient extends UsersClient {
 	private static Logger Log = Logger.getLogger(RestUsersClient.class.getName());
 
-	final URI serverURI;
 	final Client client;
 	final ClientConfig config;
 
@@ -33,7 +32,6 @@ public class RestUsersClient extends UsersClient {
 
 
 	public RestUsersClient(URI serverURI) {
-		this.serverURI = serverURI;
 
 		this.config = new ClientConfig();
 
@@ -77,59 +75,125 @@ public class RestUsersClient extends UsersClient {
 
 	@Override
 	public Result<User> getUser(String userId, String pwd) {
-		Response r = target.path(userId)
-				.queryParam(RestUsers.PASSWORD, pwd).request()
-				.accept(MediaType.APPLICATION_JSON)
-				.get();
+		for (int i = 0; i < MAX_RETRIES; i++) {
+			try {
+				Response r = target.path(userId)
+						.queryParam(RestUsers.PASSWORD, pwd).request()
+						.accept(MediaType.APPLICATION_JSON)
+						.get();
 
-		int status = r.getStatus();
-		if (status != Status.OK.getStatusCode())
-			return Result.error(getErrorCodeFrom(status));
-		else
-			return Result.ok(r.readEntity(User.class));
+				int status = r.getStatus();
+				if (status != Status.OK.getStatusCode())
+					return Result.error(getErrorCodeFrom(status));
+				else
+					return Result.ok(r.readEntity(User.class));
+
+			} catch (ProcessingException x) {
+				Log.info(x.getMessage());
+
+				try {
+					Thread.sleep(RETRY_SLEEP);
+				} catch (InterruptedException e) {
+					// Nothing to be done here.
+				}
+			} catch (Exception x) {
+				x.printStackTrace();
+			}
+		}
+		return Result.error(ErrorCode.TIMEOUT);
 	}
 
 	@Override
 	public Result<User> updateUser(String userId, String password, User user) {
-		Response r = target.path(userId)
-				.queryParam(RestUsers.PASSWORD, password).request()
-				.accept(MediaType.APPLICATION_JSON)
-				.put(Entity.entity(user, MediaType.APPLICATION_JSON));
+		for (int i = 0; i < MAX_RETRIES; i++) {
+			try {
+				Response r = target.path(userId)
+						.queryParam(RestUsers.PASSWORD, password).request()
+						.accept(MediaType.APPLICATION_JSON)
+						.put(Entity.entity(user, MediaType.APPLICATION_JSON));
 
-		int status = r.getStatus();
-		if (status != Status.OK.getStatusCode())
-			return Result.error(getErrorCodeFrom(status));
-		else
-			return Result.ok(r.readEntity(User.class));
+				int status = r.getStatus();
+				if (status != Status.OK.getStatusCode())
+					return Result.error(getErrorCodeFrom(status));
+				else
+					return Result.ok(r.readEntity(User.class));
+
+			} catch (ProcessingException x) {
+				Log.info(x.getMessage());
+
+				try {
+					Thread.sleep(RETRY_SLEEP);
+				} catch (InterruptedException e) {
+					// Nothing to be done here.
+				}
+			} catch (Exception x) {
+				x.printStackTrace();
+			}
+		}
+		return Result.error(ErrorCode.TIMEOUT);
 	}
 
 	@Override
 	public Result<User> deleteUser(String userId, String password) {
-		Response r = target.path(userId)
-				.queryParam(RestUsers.PASSWORD, password).request()
-				.accept(MediaType.APPLICATION_JSON)
-				.delete();
+		for (int i = 0; i < MAX_RETRIES; i++) {
+			try {
+				Response r = target.path(userId)
+						.queryParam(RestUsers.PASSWORD, password).request()
+						.accept(MediaType.APPLICATION_JSON)
+						.delete();
 
-		int status = r.getStatus();
-		if (status != Status.OK.getStatusCode())
-			return Result.error(getErrorCodeFrom(status));
-		else
-			return Result.ok(r.readEntity(User.class));
+				int status = r.getStatus();
+				if (status != Status.OK.getStatusCode())
+					return Result.error(getErrorCodeFrom(status));
+				else
+					return Result.ok(r.readEntity(User.class));
+
+			} catch (ProcessingException x) {
+				Log.info(x.getMessage());
+
+				try {
+					Thread.sleep(RETRY_SLEEP);
+				} catch (InterruptedException e) {
+					// Nothing to be done here.
+				}
+			} catch (Exception x) {
+				x.printStackTrace();
+			}
+		}
+		return Result.error(ErrorCode.TIMEOUT);
 	}
 
 	@Override
 	public Result<List<User>> searchUsers(String pattern) {
-		Response r = target.path("/")
-				.queryParam(RestUsers.QUERY, pattern).request()
-				.accept(MediaType.APPLICATION_JSON)
-				.get();
+		for (int i = 0; i < MAX_RETRIES; i++) {
+			try {
+				Log.info("ENTROU NO RESTUSERCLIENT");
+				Response r = target.path("/")
+						.queryParam(RestUsers.QUERY, pattern).request()
+						.accept(MediaType.APPLICATION_JSON)
+						.get();
 
-		int status = r.getStatus();
-		if (status != Status.OK.getStatusCode())
-			return Result.error(getErrorCodeFrom(status));
-		else
-			return Result.ok(r.readEntity(new GenericType<List<User>>() {
-			}));
+				int status = r.getStatus();
+				if (status != Status.OK.getStatusCode()) {
+					Log.info("ERRO DE CONEÇÃO");
+					return Result.error(getErrorCodeFrom(status));
+				} else
+					return Result.ok(r.readEntity(new GenericType<List<User>>() {
+					}));
+
+			} catch (ProcessingException x) {
+				Log.info(x.getMessage());
+
+				try {
+					Thread.sleep(RETRY_SLEEP);
+				} catch (InterruptedException e) {
+					// Nothing to be done here.
+				}
+			} catch (Exception x) {
+				x.printStackTrace();
+			}
+		}
+		return Result.error(ErrorCode.TIMEOUT);
 	}
 
 	public static ErrorCode getErrorCodeFrom(int status) {
